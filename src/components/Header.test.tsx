@@ -1,7 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { DEFAULT_CSS, DEFAULT_HTML } from '../lib/defaults'
 import { usePenStore } from '../store/penStore'
 import { Header } from './Header'
 
@@ -20,10 +19,10 @@ describe('Header New', () => {
     vi.restoreAllMocks()
   })
 
-  it('renders New to the left of Reset', () => {
+  it('renders New button', () => {
     render(<Header />)
     const buttons = screen.getAllByRole('button')
-    expect(buttons.map((b) => b.textContent)).toEqual(['New', 'Reset'])
+    expect(buttons.map((b) => b.textContent)).toEqual(['New'])
   })
 
   it('clears editors when New is confirmed', async () => {
@@ -51,17 +50,5 @@ describe('Header New', () => {
     expect(usePenStore.getState().html).toBe('<p>draft</p>')
     expect(usePenStore.getState().css).toBe('body{}')
     expect(usePenStore.getState().resetRevision).toBe(0)
-  })
-
-  it('Reset still restores defaults without confirm', async () => {
-    const user = userEvent.setup()
-    const confirmSpy = vi.spyOn(window, 'confirm')
-
-    render(<Header />)
-    await user.click(screen.getByRole('button', { name: 'Reset' }))
-
-    expect(confirmSpy).not.toHaveBeenCalled()
-    expect(usePenStore.getState().html).toBe(DEFAULT_HTML)
-    expect(usePenStore.getState().css).toBe(DEFAULT_CSS)
   })
 })
