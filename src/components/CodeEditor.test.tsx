@@ -1,26 +1,27 @@
 import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { CodeEditor } from './CodeEditor'
 
 vi.mock('@uiw/react-codemirror', () => ({
   default: () => <div data-testid="codemirror-stub" />,
 }))
 
+function setupClipboardUser() {
+  const user = userEvent.setup()
+
+  if (!navigator.clipboard) {
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: () => Promise.resolve() },
+    })
+  }
+
+  const writeText = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue(undefined)
+  return { user, writeText }
+}
+
 describe('CodeEditor copy', () => {
-  let writeText: ReturnType<typeof vi.spyOn>
-
-  beforeEach(() => {
-    if (!navigator.clipboard) {
-      Object.defineProperty(navigator, 'clipboard', {
-        configurable: true,
-        value: { writeText: () => Promise.resolve() },
-      })
-    }
-
-    writeText = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue(undefined)
-  })
-
   afterEach(() => {
     cleanup()
     vi.restoreAllMocks()
@@ -28,7 +29,7 @@ describe('CodeEditor copy', () => {
   })
 
   it('copies the full editor value when the copy button is clicked', async () => {
-    const user = userEvent.setup()
+    const { user, writeText } = setupClipboardUser()
 
     render(
       <CodeEditor label="HTML" lang="html" value="<h1>Hi</h1>" onChange={() => {}} />,
@@ -42,7 +43,7 @@ describe('CodeEditor copy', () => {
   })
 
   it('shows a Copied label after a successful copy', async () => {
-    const user = userEvent.setup()
+    const { user } = setupClipboardUser()
 
     render(
       <CodeEditor label="CSS" lang="css" value="body{}" onChange={() => {}} />,
@@ -56,6 +57,14 @@ describe('CodeEditor copy', () => {
   it('reverts to Copy code after 1.5s', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
+
+    if (!navigator.clipboard) {
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: { writeText: () => Promise.resolve() },
+      })
+    }
+    vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue(undefined)
 
     render(
       <CodeEditor label="HTML" lang="html" value="x" onChange={() => {}} />,
@@ -72,7 +81,7 @@ describe('CodeEditor copy', () => {
   })
 
   it('does not show Copied when clipboard write fails', async () => {
-    const user = userEvent.setup()
+    const { user, writeText } = setupClipboardUser()
     writeText.mockRejectedValue(new Error('denied'))
 
     render(
