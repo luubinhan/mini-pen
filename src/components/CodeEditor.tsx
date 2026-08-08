@@ -1,9 +1,13 @@
+import { indentLess } from '@codemirror/commands'
 import { css } from '@codemirror/lang-css'
 import { html } from '@codemirror/lang-html'
+import { keymap } from '@codemirror/view'
 import CodeMirror from '@uiw/react-codemirror'
 import { oneDark } from '@codemirror/theme-one-dark'
+import { EmmetKnownSyntax, emmetConfig } from '@emmetio/codemirror6-plugin'
 import { Check, Copy } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { runEmmetTab } from '../lib/emmetTab'
 
 type CodeEditorProps = {
   id?: string
@@ -16,7 +20,19 @@ type CodeEditorProps = {
 const COPIED_MS = 1500
 
 export function CodeEditor({ id, label, lang, value, onChange }: CodeEditorProps) {
-  const extensions = useMemo(() => (lang === 'html' ? [html()] : [css()]), [lang])
+  const extensions = useMemo(
+    () => [
+      lang === 'html' ? html() : css(),
+      emmetConfig.of({
+        syntax: lang === 'html' ? EmmetKnownSyntax.html : EmmetKnownSyntax.css,
+      }),
+      keymap.of([
+        { key: 'Tab', run: runEmmetTab },
+        { key: 'Shift-Tab', run: indentLess },
+      ]),
+    ],
+    [lang],
+  )
   const [copied, setCopied] = useState(false)
   const copiedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -69,6 +85,7 @@ export function CodeEditor({ id, label, lang, value, onChange }: CodeEditorProps
           extensions={extensions}
           onChange={onChange}
           className="h-full text-sm [&_.cm-editor]:h-full [&_.cm-scroller]:h-full scrollbar-thumb-zinc-700 scrollbar-track-[#282c34]"
+          indentWithTab={false}
           basicSetup={{
             foldGutter: false,
             lineNumbers: true,

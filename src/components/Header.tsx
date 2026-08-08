@@ -1,10 +1,11 @@
+import { FilePlus, RotateCcw } from 'lucide-react'
 import { usePenStore } from '../store/penStore'
 import Favicon from '../assets/favicon.svg?react'
 
 const CLEAR_CONFIRM = 'Clear all HTML and CSS? This cannot be undone.'
 
 const actionButtonClassName =
-  'rounded border border-zinc-700 bg-zinc-900 px-3 py-1 text-xs font-medium text-zinc-200 hover:bg-zinc-800 cursor-pointer'
+  'inline-flex items-center gap-1.5 rounded border border-zinc-700 bg-zinc-900 px-3 py-1 text-xs font-medium text-zinc-200 hover:bg-zinc-800 cursor-pointer'
 
 export function Header() {
   const reset = usePenStore((s) => s.reset)
@@ -24,11 +25,13 @@ export function Header() {
       </span>
       <div className="flex items-center gap-2">
         <button type="button" onClick={handleNew} className={actionButtonClassName}>
+          <FilePlus className="size-3.5" aria-hidden />
           New
         </button>
-        <button type="button" onClick={reset} className={actionButtonClassName}>
+        {/* <button type="button" onClick={reset} className={actionButtonClassName}>
+          <RotateCcw className="size-3.5" aria-hidden />
           Reset
-        </button>
+        </button> */}
       </div>
     </header>
   )
