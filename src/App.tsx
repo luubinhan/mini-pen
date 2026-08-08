@@ -1,7 +1,11 @@
+import { EditorLayout } from './components/EditorLayout'
+import { Header } from './components/Header'
+
 export default function App() {
   return (
-    <div className="flex h-full items-center justify-center bg-zinc-950 text-zinc-100">
-      <h1 className="text-2xl font-semibold tracking-tight">mini-pen</h1>
+    <div className="flex h-full flex-col bg-zinc-950 text-zinc-100">
+      <Header />
+      <EditorLayout />
     </div>
   )
 }
