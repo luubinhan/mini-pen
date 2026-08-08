@@ -39,7 +39,7 @@
 - Consumes: existing `CodeEditorProps` (`id?`, `label`, `lang`, `value`, `onChange`)
 - Produces: unchanged public props; internal `copied` boolean; button `aria-label` `"Copy code"` / `"Copied"`
 
-- [ ] **Step 1: Install dependency**
+- [x] **Step 1: Install dependency**
 
 ```bash
 npm install lucide-react
