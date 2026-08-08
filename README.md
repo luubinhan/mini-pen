@@ -1,19 +1,27 @@
 # mini-pen
 
-CodePen-like HTML/CSS playground.
+Simple CodePen-like HTML/CSS playground (React + TypeScript + Tailwind).
 
-## Development
+## Develop
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:5173/mini-pen/](http://localhost:5173/mini-pen/)
+App is served under `/mini-pen/` (Vite `base`).
 
-## Scripts
+## Test / build
 
-- `npm run dev` — start dev server
-- `npm run build` — production build
-- `npm test` — run Vitest once
-- `npm run test:watch` — Vitest watch mode
+```bash
+npm test
+npm run build
+```
+
+## Deploy
+
+Push to `main` runs GitHub Actions → GitHub Pages.
+
+Repo Settings → Pages → Source: **GitHub Actions**.
+
+Live URL (typical): `https://<user>.github.io/mini-pen/`
