@@ -5,6 +5,7 @@ import { DEFAULT_CSS, DEFAULT_HTML } from '../lib/defaults'
 export type PenState = {
   html: string
   css: string
+  resetRevision: number
   setHtml: (html: string) => void
   setCss: (css: string) => void
   reset: () => void
@@ -15,9 +16,15 @@ export const usePenStore = create<PenState>()(
     (set) => ({
       html: DEFAULT_HTML,
       css: DEFAULT_CSS,
+      resetRevision: 0,
       setHtml: (html) => set({ html }),
       setCss: (css) => set({ css }),
-      reset: () => set({ html: DEFAULT_HTML, css: DEFAULT_CSS }),
+      reset: () =>
+        set((state) => ({
+          html: DEFAULT_HTML,
+          css: DEFAULT_CSS,
+          resetRevision: state.resetRevision + 1,
+        })),
     }),
     {
       name: 'mini-pen',

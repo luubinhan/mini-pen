@@ -12,21 +12,23 @@ const separatorClassName =
 export function EditorLayout() {
   const html = usePenStore((state) => state.html)
   const css = usePenStore((state) => state.css)
+  const resetRevision = usePenStore((state) => state.resetRevision)
   const setHtml = usePenStore((state) => state.setHtml)
   const setCss = usePenStore((state) => state.setCss)
   const [localHtml, setLocalHtml] = useState(html)
   const [localCss, setLocalCss] = useState(css)
-
-  useEffect(() => {
-    setLocalHtml(html)
-  }, [html])
-
-  useEffect(() => {
-    setLocalCss(css)
-  }, [css])
-
   const debouncedSetHtml = useDebouncedCallback(setHtml, DEBOUNCE_MS)
   const debouncedSetCss = useDebouncedCallback(setCss, DEBOUNCE_MS)
+
+  useEffect(() => {
+    debouncedSetHtml.cancel()
+    setLocalHtml(html)
+  }, [debouncedSetHtml, html, resetRevision])
+
+  useEffect(() => {
+    debouncedSetCss.cancel()
+    setLocalCss(css)
+  }, [css, debouncedSetCss, resetRevision])
 
   return (
     <Group orientation="horizontal" className="min-h-0 flex-1">

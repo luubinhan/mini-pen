@@ -89,4 +89,23 @@ describe('EditorLayout', () => {
     expect(screen.getByRole('textbox', { name: 'HTML' })).toHaveValue('<main>reset</main>')
     expect(screen.getByRole('textbox', { name: 'CSS' })).toHaveValue('main { color: red; }')
   })
+
+  it('cancels a pending editor write when reset keeps the store at defaults', () => {
+    render(<EditorLayout />)
+
+    fireEvent.change(screen.getByRole('textbox', { name: 'HTML' }), {
+      target: { value: '<p>stale edit</p>' },
+    })
+
+    act(() => {
+      usePenStore.getState().reset()
+    })
+
+    act(() => {
+      vi.advanceTimersByTime(150)
+    })
+
+    expect(usePenStore.getState().html).toBe(DEFAULT_HTML)
+    expect(screen.getByRole('textbox', { name: 'HTML' })).toHaveValue(DEFAULT_HTML)
+  })
 })

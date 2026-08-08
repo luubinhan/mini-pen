@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useRef } from 'react'
 
+export type DebouncedCallback<Args extends unknown[]> = ((...args: Args) => void) & {
+  cancel: () => void
+}
+
 export function useDebouncedCallback<Args extends unknown[]>(
   callback: (...args: Args) => void,
   delayMs: number,
-): (...args: Args) => void {
+): DebouncedCallback<Args> {
   const callbackRef = useRef(callback)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -11,24 +15,26 @@ export function useDebouncedCallback<Args extends unknown[]>(
     callbackRef.current = callback
   }, [callback])
 
-  useEffect(() => {
-    return () => {
+  const debouncedCallback = useMemo(() => {
+    const cancel = () => {
       if (timeoutRef.current !== null) {
         clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
       }
     }
-  }, [])
 
-  return useMemo(
-    () =>
-      (...args: Args) => {
-        if (timeoutRef.current !== null) {
-          clearTimeout(timeoutRef.current)
-        }
-        timeoutRef.current = setTimeout(() => {
-          callbackRef.current(...args)
-        }, delayMs)
-      },
-    [delayMs],
-  )
+    const run = (...args: Args) => {
+      cancel()
+      timeoutRef.current = setTimeout(() => {
+        timeoutRef.current = null
+        callbackRef.current(...args)
+      }, delayMs)
+    }
+
+    return Object.assign(run, { cancel })
+  }, [delayMs])
+
+  useEffect(() => () => debouncedCallback.cancel(), [debouncedCallback])
+
+  return debouncedCallback
 }
