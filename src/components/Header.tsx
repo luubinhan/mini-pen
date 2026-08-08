@@ -1,11 +1,15 @@
 import { usePenStore } from '../store/penStore'
+import Favicon from '../assets/favicon.svg?react'
 
 export function Header() {
   const reset = usePenStore((s) => s.reset)
 
   return (
     <header className="flex h-12 shrink-0 items-center justify-between border-b border-zinc-800 bg-zinc-950 px-4">
-      <span className="text-sm font-semibold tracking-tight text-zinc-100">Mini Pen</span>
+      <span className="flex items-center gap-2 text-sm font-semibold tracking-tight text-zinc-100">
+        <Favicon className="size-4" aria-hidden />
+        Mini Pen
+      </span>
       <button
         type="button"
         onClick={reset}
