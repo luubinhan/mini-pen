@@ -1,8 +1,20 @@
 import { usePenStore } from '../store/penStore'
 import Favicon from '../assets/favicon.svg?react'
 
+const CLEAR_CONFIRM = 'Clear all HTML and CSS? This cannot be undone.'
+
+const actionButtonClassName =
+  'rounded border border-zinc-700 bg-zinc-900 px-3 py-1 text-xs font-medium text-zinc-200 hover:bg-zinc-800 cursor-pointer'
+
 export function Header() {
   const reset = usePenStore((s) => s.reset)
+  const clear = usePenStore((s) => s.clear)
+
+  function handleNew() {
+    if (window.confirm(CLEAR_CONFIRM)) {
+      clear()
+    }
+  }
 
   return (
     <header className="flex h-12 shrink-0 items-center justify-between border-b border-zinc-800 bg-zinc-950 px-4">
@@ -10,13 +22,14 @@ export function Header() {
         <Favicon className="size-4" aria-hidden />
         Mini Pen
       </span>
-      <button
-        type="button"
-        onClick={reset}
-        className="rounded border border-zinc-700 bg-zinc-900 px-3 py-1 text-xs font-medium text-zinc-200 hover:bg-zinc-800 cursor-pointer"
-      >
-        Reset
-      </button>
+      <div className="flex items-center gap-2">
+        <button type="button" onClick={handleNew} className={actionButtonClassName}>
+          New
+        </button>
+        <button type="button" onClick={reset} className={actionButtonClassName}>
+          Reset
+        </button>
+      </div>
     </header>
   )
 }

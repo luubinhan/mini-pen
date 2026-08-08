@@ -5,7 +5,7 @@ import { usePenStore } from './penStore'
 describe('penStore', () => {
   beforeEach(() => {
     localStorage.clear()
-    usePenStore.setState({ html: DEFAULT_HTML, css: DEFAULT_CSS })
+    usePenStore.setState({ html: DEFAULT_HTML, css: DEFAULT_CSS, resetRevision: 0 })
   })
 
   it('setHtml and setCss update state', () => {
@@ -29,5 +29,13 @@ describe('penStore', () => {
     usePenStore.getState().reset()
     expect(usePenStore.getState().html).toBe(DEFAULT_HTML)
     expect(usePenStore.getState().css).toBe(DEFAULT_CSS)
+  })
+
+  it('clear empties html and css and bumps resetRevision', () => {
+    usePenStore.setState({ html: '<p>x</p>', css: 'a{}', resetRevision: 2 })
+    usePenStore.getState().clear()
+    expect(usePenStore.getState().html).toBe('')
+    expect(usePenStore.getState().css).toBe('')
+    expect(usePenStore.getState().resetRevision).toBe(3)
   })
 })

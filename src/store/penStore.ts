@@ -9,6 +9,7 @@ export type PenState = {
   setHtml: (html: string) => void
   setCss: (css: string) => void
   reset: () => void
+  clear: () => void
 }
 
 export const usePenStore = create<PenState>()(
@@ -23,6 +24,12 @@ export const usePenStore = create<PenState>()(
         set((state) => ({
           html: DEFAULT_HTML,
           css: DEFAULT_CSS,
+          resetRevision: state.resetRevision + 1,
+        })),
+      clear: () =>
+        set((state) => ({
+          html: '',
+          css: '',
           resetRevision: state.resetRevision + 1,
         })),
     }),
