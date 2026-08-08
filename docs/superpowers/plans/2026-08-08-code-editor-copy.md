@@ -47,7 +47,7 @@ npm install lucide-react
 
 Expected: `lucide-react` appears in `dependencies` in `package.json`.
 
-- [ ] **Step 2: Write the failing tests**
+- [x] **Step 2: Write the failing tests**
 
 Create `src/components/CodeEditor.test.tsx`:
 
@@ -147,7 +147,7 @@ If `@testing-library/user-event` is missing, install it as a devDependency:
 npm install -D @testing-library/user-event
 ```
 
-- [ ] **Step 3: Run tests to verify they fail**
+- [x] **Step 3: Run tests to verify they fail**
 
 ```bash
 npm test -- src/components/CodeEditor.test.tsx
@@ -155,7 +155,7 @@ npm test -- src/components/CodeEditor.test.tsx
 
 Expected: FAIL — missing copy button / `getByRole('button', { name: 'Copy code' })` not found.
 
-- [ ] **Step 4: Implement CodeEditor copy button**
+- [x] **Step 4: Implement CodeEditor copy button**
 
 Replace `src/components/CodeEditor.tsx` with:
 
@@ -243,7 +243,7 @@ export function CodeEditor({ id, label, lang, value, onChange }: CodeEditorProps
 }
 ```
 
-- [ ] **Step 5: Run tests to verify they pass**
+- [x] **Step 5: Run tests to verify they pass**
 
 ```bash
 npm test -- src/components/CodeEditor.test.tsx
@@ -251,7 +251,7 @@ npm test -- src/components/CodeEditor.test.tsx
 
 Expected: PASS (all four tests).
 
-- [ ] **Step 6: Run full suite + lint**
+- [x] **Step 6: Run full suite + lint**
 
 ```bash
 npm test && npm run lint
@@ -259,7 +259,7 @@ npm test && npm run lint
 
 Expected: all green.
 
-- [ ] **Step 7: Snyk scan on new/modified first-party code**
+- [x] **Step 7: Snyk scan on new/modified first-party code** (auth skipped by user)
 
 Run Snyk Code scan on `src/components/CodeEditor.tsx` and `src/components/CodeEditor.test.tsx`. Fix any new issues and rescan until clean.
 
