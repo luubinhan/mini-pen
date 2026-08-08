@@ -2,6 +2,7 @@ import { css } from '@codemirror/lang-css'
 import { html } from '@codemirror/lang-html'
 import CodeMirror from '@uiw/react-codemirror'
 import { oneDark } from '@codemirror/theme-one-dark'
+import { useMemo } from 'react'
 
 type CodeEditorProps = {
   id?: string
@@ -12,7 +13,7 @@ type CodeEditorProps = {
 }
 
 export function CodeEditor({ id, label, lang, value, onChange }: CodeEditorProps) {
-  const extensions = lang === 'html' ? [html()] : [css()]
+  const extensions = useMemo(() => (lang === 'html' ? [html()] : [css()]), [lang])
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-zinc-950">

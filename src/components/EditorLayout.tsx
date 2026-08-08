@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Group, Panel, Separator } from 'react-resizable-panels'
 import { useDebouncedCallback } from '../hooks/useDebouncedCallback'
 import { usePenStore } from '../store/penStore'
@@ -17,16 +17,50 @@ export function EditorLayout() {
   const setCss = usePenStore((state) => state.setCss)
   const [localHtml, setLocalHtml] = useState(html)
   const [localCss, setLocalCss] = useState(css)
-  const debouncedSetHtml = useDebouncedCallback(setHtml, DEBOUNCE_MS)
-  const debouncedSetCss = useDebouncedCallback(setCss, DEBOUNCE_MS)
+  const htmlResetRevisionRef = useRef(resetRevision)
+  const cssResetRevisionRef = useRef(resetRevision)
+  const lastHtmlWriteRef = useRef<string | null>(null)
+  const lastCssWriteRef = useRef<string | null>(null)
+  const debouncedSetHtml = useDebouncedCallback((value: string) => {
+    lastHtmlWriteRef.current = value
+    setHtml(value)
+  }, DEBOUNCE_MS)
+  const debouncedSetCss = useDebouncedCallback((value: string) => {
+    lastCssWriteRef.current = value
+    setCss(value)
+  }, DEBOUNCE_MS)
 
   useEffect(() => {
-    debouncedSetHtml.cancel()
+    if (htmlResetRevisionRef.current !== resetRevision) {
+      htmlResetRevisionRef.current = resetRevision
+      lastHtmlWriteRef.current = null
+      debouncedSetHtml.cancel()
+      setLocalHtml(html)
+      return
+    }
+
+    if (lastHtmlWriteRef.current === html) {
+      lastHtmlWriteRef.current = null
+      return
+    }
+
     setLocalHtml(html)
   }, [debouncedSetHtml, html, resetRevision])
 
   useEffect(() => {
-    debouncedSetCss.cancel()
+    if (cssResetRevisionRef.current !== resetRevision) {
+      cssResetRevisionRef.current = resetRevision
+      lastCssWriteRef.current = null
+      debouncedSetCss.cancel()
+      setLocalCss(css)
+      return
+    }
+
+    if (lastCssWriteRef.current === css) {
+      lastCssWriteRef.current = null
+      return
+    }
+
     setLocalCss(css)
   }, [css, debouncedSetCss, resetRevision])
 

@@ -13,6 +13,14 @@ describe('penStore', () => {
     usePenStore.getState().setCss('p { color: blue; }')
     expect(usePenStore.getState().html).toBe('<p>x</p>')
     expect(usePenStore.getState().css).toBe('p { color: blue; }')
+
+    const persisted = JSON.parse(localStorage.getItem('mini-pen') ?? '{}') as {
+      state?: { html?: string; css?: string }
+    }
+    expect(persisted.state).toEqual({
+      html: '<p>x</p>',
+      css: 'p { color: blue; }',
+    })
   })
 
   it('reset restores defaults', () => {

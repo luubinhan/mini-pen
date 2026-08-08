@@ -79,6 +79,27 @@ describe('EditorLayout', () => {
     expect(usePenStore.getState().html).toBe('<p>changed</p>')
   })
 
+  it('does not cancel a newer pending edit when the store echoes an earlier edit', () => {
+    render(<EditorLayout />)
+    const htmlEditor = screen.getByRole('textbox', { name: 'HTML' })
+
+    fireEvent.change(htmlEditor, { target: { value: '<p>first</p>' } })
+
+    act(() => {
+      vi.advanceTimersByTime(150)
+      fireEvent.change(htmlEditor, { target: { value: '<p>second</p>' } })
+    })
+
+    expect(htmlEditor).toHaveValue('<p>second</p>')
+    expect(usePenStore.getState().html).toBe('<p>first</p>')
+
+    act(() => {
+      vi.advanceTimersByTime(150)
+    })
+
+    expect(usePenStore.getState().html).toBe('<p>second</p>')
+  })
+
   it('synchronizes editor buffers when store content changes', () => {
     render(<EditorLayout />)
 
