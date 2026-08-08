@@ -16,8 +16,8 @@ export function CodeEditor({ id, label, lang, value, onChange }: CodeEditorProps
   const extensions = useMemo(() => (lang === 'html' ? [html()] : [css()]), [lang])
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-zinc-950">
-      <div className="flex shrink-0 items-center border-b border-zinc-800 px-3 py-1.5">
+    <div className="flex h-full min-h-0 flex-col bg-zinc-900">
+      <div className="flex shrink-0 items-center border-b border-white/20 px-3 py-1.5">
         <label htmlFor={id} className="text-xs font-medium uppercase tracking-wider text-zinc-400">
           {label}
         </label>
@@ -30,7 +30,7 @@ export function CodeEditor({ id, label, lang, value, onChange }: CodeEditorProps
           theme={oneDark}
           extensions={extensions}
           onChange={onChange}
-          className="h-full text-sm [&_.cm-editor]:h-full [&_.cm-scroller]:h-full"
+          className="h-full text-sm [&_.cm-editor]:h-full [&_.cm-scroller]:h-full scrollbar-thumb-zinc-700 scrollbar-track-[#282c34]"
           basicSetup={{
             foldGutter: false,
             lineNumbers: true,

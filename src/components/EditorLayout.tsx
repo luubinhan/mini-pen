@@ -7,7 +7,7 @@ import { Preview } from './Preview'
 
 const DEBOUNCE_MS = 150
 const separatorClassName =
-  'shrink-0 bg-zinc-800 transition-colors active:bg-sky-600 focus-visible:bg-sky-600 focus-visible:outline-none'
+  'shrink-0 bg-zinc-900 transition-colors hover:bg-zinc-950 active:bg-yellow-400 focus-visible:bg-yellow-400 focus-visible:outline-none'
 
 export function EditorLayout() {
   const html = usePenStore((state) => state.html)
